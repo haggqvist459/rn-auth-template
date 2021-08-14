@@ -21,9 +21,9 @@ const SignUp = ({ navigation }) => {
         const [password, setPassword] = useState('');
         const [loading, setLoading] = useState(false);
 
-
         // hooks
 
+        
         // functions
         const handleSignUp = async () => {
                 setLoading(true);
@@ -126,7 +126,7 @@ const SignUp = ({ navigation }) => {
                                 text={'Sign Up'}
                         />
                         <SignInLink onPress={() => navigation.navigate(ROUTES.SIGN_IN)}>
-                                <Text small center> Already registered? <Text small underline bold color={COLORS.PRIMARY_TEXT}>Sign in!</Text> </Text>
+                                <Text medium center> Already registered? <Text medium underline bold color={COLORS.PRIMARY_TEXT}>Sign in!</Text> </Text>
                         </SignInLink>
                 </Container>
         )

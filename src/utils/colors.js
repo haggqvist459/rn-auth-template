@@ -1,7 +1,7 @@
 const COLORS = {
         // Theme variables
-        PRIMARY_TEXT: '#2A2728', //Charleston Green
-        SECONDARY_TEXT: '#E1DFD8', //White coffee
+        PRIMARY_TEXT: '#2A2728', // Charleston Green
+        SECONDARY_TEXT: '#E1DFD8', // White coffee
         PRIMARY_BUTTON: '#2A2728', // Charleston Green
         SECONDARY_BUTTON: '#2B85BE', // Cornflower Blue
         PRIMARY_BACKGROUND: '#E1DFD8', // White coffee
@@ -24,4 +24,5 @@ const COLORS = {
         // scheme 1 end 
 
 }
+
 export default COLORS;

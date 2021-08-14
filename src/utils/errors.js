@@ -1,5 +1,5 @@
-//convert the error codes into message
-// incompleted
+// convert the error codes into message
+// incomplete
 const errorMessages = (error) => {
         switch (error) {
                 case 'signIn-auth/wrong-password':

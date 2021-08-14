@@ -89,7 +89,7 @@ const SignIn = ({ navigation }) => {
                                                 disabled={loading}
                                                 text={'Sign In'}/>
                                         <SignUpLink onPress={() => navigation.navigate(ROUTES.SIGN_UP)}>
-                                                <Text small center> New to the app? <Text small bold underline color={COLORS.PRIMARY_TEXT}>Sign Up!</Text> </Text>
+                                                <Text medium center> New to the app? <Text bold underline color={COLORS.PRIMARY_TEXT}>Sign Up!</Text> </Text>
                                         </SignUpLink>
                                 </Main>
                 </Container>

@@ -1,13 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 import Text from '../components/base/CustomText'
+import { COLORS } from '../utils'
 
-const Home = ({ navigation }) => {
-
-        const handleProfileButtonClick = () => {
-                navigation.navigate('Profile');
-        }
-
+const Home = () => {
 
         return (
                 <Container>
@@ -18,11 +14,6 @@ const Home = ({ navigation }) => {
                         <TextBox>
                                 <Text mediumLarge center semiBold>Main screen of the template, intended to be the landing page / main screen of the app after signing in. </Text>
                         </TextBox>
-
-
-                        <ProfileButton onPress={() => handleProfileButtonClick()}>
-                                <Text large bold > Profile </Text>
-                        </ProfileButton>
                 </Container>
         )
 }
@@ -31,6 +22,7 @@ export default Home
 
 const Container = styled.View`
         flex: 1;
+        background-color: ${COLORS.PRIMARY_BACKGROUND};
 `;
 
 const Title = styled.View`
@@ -43,15 +35,5 @@ const TextBox = styled.View`
         align-self: center;
 `;
 
-const ProfileButton = styled.TouchableOpacity`
-        margin-top: 16px;
-        height: 48px;
-        width: 160px;
-        align-self: center;
-        align-items: center;
-        justify-content: center;
-        background-color: #F1C902;
-        border-radius: 10px;
-`;
 
 const StatusBar = styled.StatusBar``;
