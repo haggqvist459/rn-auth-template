@@ -7,12 +7,9 @@ const HeaderGraphics = () => {
 
         return (
                 <Header>
-                        <Sky />
-                        <Sun />
-                        <CloudRightSmall />
-                        <CloudRightBig />
-                        <CloudLeftBig />
-                        <CloudLeftSmall />
+                        <BlueCircleRight />
+                        {/* <GreyCircleRight /> */}
+                        <GreyCircleLeft />
                         <StatusBar
                                 barStyle="light-content"
                                 translucent={true}
@@ -31,64 +28,34 @@ const Header = styled.View`
         z-index: -100;
 `;
 
-const Sky = styled.View`
+const BlueCircleRight = styled.View`
         background-color: ${COLORS.CORNFLOWER_BLUE}; 
         position: absolute;
-        right: -100px;
-        top: -220px;
+        right: -70px;
+        top: -250px;
         width: 400px;
         height: 400px;
         border-radius: 200px;
 `;
 
-
-const Sun = styled.View`
-        background-color: ${COLORS.CARROT_ORANGE};
-        position: absolute;
-        right: -5px;
-        top: 30px;
-        width: 100px;
-        height: 100px;
-        border-radius: 50px;
-`;
-
-const CloudRightBig = styled.View`
+const GreyCircleRight = styled.View`
         background-color: ${COLORS.CHARLESTON_GREEN}; 
         position: absolute;
         top: 5px;
         right: -20px;
-        width: 100px;
-        height: 100px;
-        border-radius: 50px;
+        width: 130px;
+        height: 130px;
+        border-radius: 65px;
 `;
 
-const CloudRightSmall = styled.View`
-        background-color: ${COLORS.CHARLESTON_GREEN}; 
-        position: absolute;
-        top: 15px;
-        right: 45px;
-        width: 80px;
-        height: 80px;
-        border-radius: 40px;
-`;
 
-const CloudLeftBig = styled.View`
+const GreyCircleLeft = styled.View`
         background-color: ${COLORS.CHARLESTON_GREEN}; 
         position: absolute;
         width: 200px;
         height: 200px;
-        left: -50px;
+        left: -20px;
         top: -50px;
-        border-radius: 100px;
-`;
-
-const CloudLeftSmall = styled.View`
-        background-color: ${COLORS.CHARLESTON_GREEN}; 
-        position: absolute;
-        width: 120px;
-        height: 120px;
-        left: 80px;
-        top: 0px;
         border-radius: 100px;
 `;
 

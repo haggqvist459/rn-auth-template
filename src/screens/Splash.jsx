@@ -4,6 +4,8 @@ import LottieView from 'lottie-react-native'
 import { UserContext } from '../contexts/UserContext'
 import { FirebaseContext } from '../contexts/FirebaseContext'
 import { loadFonts, COLORS } from '../utils'
+import HeaderGraphics from '../components/HeaderGraphics'
+
 
 const Splash = () => {
 
@@ -13,7 +15,7 @@ const Splash = () => {
         useEffect(() => {
                 console.log("Splash useEffect start");
 
-                
+
                 getFonts().then(() => {
                         getCurrentUser();
                 })
@@ -51,13 +53,16 @@ const Splash = () => {
 
         return (
                 <Container>
-                        <LottieView 
-                                source={require("../assets/animations/loading-circle-blue.json")} 
-                                autoPlay 
-                                loop
-                                speed={1.25}
-                        />
-                        <StatusBar barStyle='light-content'/>
+                        <HeaderGraphics/>
+                        <Main>
+                                <LottieView
+                                        source={require("../assets/animations/loading-circle-blue.json")}
+                                        autoPlay
+                                        loop
+                                        speed={1.25}
+                                        style={{width: '50%'}}
+                                />
+                        </Main>
                 </Container>
         )
 }
@@ -66,9 +71,11 @@ export default Splash
 
 const Container = styled.View`
         flex: 1;
-        align-items: center;
-        justify-content: center;
-        background-color: ${COLORS.WHITE_COFFEE};
+        background-color: ${COLORS.PRIMARY_BACKGROUND};
 `;
 
-const StatusBar = styled.StatusBar``;
+const Main = styled.View`
+        flex: 1;
+        justify-content: center;
+        align-items: center;
+`;

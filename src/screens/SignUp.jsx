@@ -3,36 +3,31 @@ import styled from 'styled-components'
 import { Alert } from 'react-native'
 import { FirebaseContext } from '../contexts/FirebaseContext'
 import { UserContext } from '../contexts/UserContext'
-import Text from '../components/base/CustomText'
-import { MaterialIcons } from '@expo/vector-icons';
+import { Text, Input, PasswordInput, SubmitButton } from '../components/base';
+import HeaderGraphics from '../components/HeaderGraphics'
+import { COLORS, ROUTES, errorMessage } from '../utils'
 
 
 // needs keyboard avoiding view etc
 const SignUp = ({ navigation }) => {
 
-        // component states
-        const [email, setEmail] = useState('');
-        const [username, setUsername] = useState('');
-        const [password, setPassword] = useState('');
-        const [passwordHidden, setPasswordHidden] = useState(true);
-        const [loading, setLoading] = useState(false);
-
-        // component contexts
+        // contexts
         const firebase = useContext(FirebaseContext);
         const [_, setUser] = useContext(UserContext);
 
-        useEffect(() => {
-                console.log("SignUp useEffect Start")
+        // states
+        const [email, setEmail] = useState('');
+        const [username, setUsername] = useState('');
+        const [password, setPassword] = useState('');
+        const [loading, setLoading] = useState(false);
 
-                return () => {
-                        console.log("SignUp Screen useEffect cleanup")
-                }
-        }, []);
 
+        // hooks
+
+        // functions
         const handleSignUp = async () => {
                 setLoading(true);
-
-                if(validateInputs(username, email, password)) {
+                if (validateInputs(username, email, password)) {
                         const user = {
                                 username,
                                 email,
@@ -40,17 +35,16 @@ const SignUp = ({ navigation }) => {
                         }
                         try {
                                 const createdUser = await firebase.createUser(user);
-        
                                 if (createdUser) {
                                         setUser({ ...createdUser, isLoggedIn: true });
                                 }
-        
                         } catch (error) {
-                                console.log("Error @handleSignUp: ", error.message)
+                                console.log("Error @handleSignUp: ", error.code)
+                                createAlert('Could not register you', errorMessage(error.code));
                         } finally {
                                 setLoading(false);
                         }
-                }               
+                }
                 setLoading(false);
         }
 
@@ -65,17 +59,17 @@ const SignUp = ({ navigation }) => {
                                         // username, email and password are all okay
                                         return true;
                                 } else {
-                                        createAlert('Bad password!', 'Password incorrectly formatted, might be too short');
+                                        createAlert('Could not register you', 'Password incorrectly formatted, it needs to be at least 7 characters.');
                                         return false;
                                 }
                         } else {
                                 // alert the user of an incorrectly formatted email
-                                createAlert('Bad email!', 'Email format incorrect, check it again.');
+                                createAlert('Could not register you', 'The email format is incorrect, check your email again.');
                                 return false;
                         }
                 } else {
                         // alert the user of an incorrect username
-                        createAlert('Bad username!', 'Username is too short!');
+                        createAlert('Could not register you', 'Your username is too short. It needs to be at least two characters.');
                         return false;
                 }
         }
@@ -90,23 +84,24 @@ const SignUp = ({ navigation }) => {
 
         return (
                 <Container>
+                        <HeaderGraphics />
                         <Main>
-                                <Text large semi center>
+                                <Text large bold center>
                                         Sign up to get started!
                                 </Text>
                         </Main>
 
                         <Auth>
                                 <AuthContainer>
-                                        <Text tiny semi left uppercase color={'#8C8B8B'}>Username</Text>
-                                        <AuthField
+                                        <Text tiny semi left uppercase color={COLORS.GRAY}>Username</Text>
+                                        <Input
                                                 autoCorrect={false}
                                                 onChangeText={(value) => setUsername(value)}
                                         />
                                 </AuthContainer>
                                 <AuthContainer>
-                                        <Text tiny semi left uppercase color={'#8C8B8B'}>email</Text>
-                                        <AuthField
+                                        <Text tiny semi left uppercase color={COLORS.GRAY}>email</Text>
+                                        <Input
                                                 autoCapitalize="none"
                                                 autoCompleteType="email"
                                                 autoCorrect={false}
@@ -115,40 +110,24 @@ const SignUp = ({ navigation }) => {
                                         />
                                 </AuthContainer>
                                 <AuthContainer>
-                                        <Text tiny semi left uppercase color={'#8C8B8B'}>Password:</Text>
-                                        <PasswordInputView>
-                                                <AuthField 
-                                                        autoCapitalize="none"
-                                                        autoCompleteType="password"
-                                                        autoCorrect={false}
-                                                        secureTextEntry={passwordHidden}
-                                                        onChangeText={(value) => setPassword(value)} 
-                                                        />
-                                                <PasswordIconToggle onPress={() => setPasswordHidden(!passwordHidden)}>
-                                                        <MaterialIcons name={`visibility${passwordHidden ? '-off' : ''}`} size={24} color="black" />
-                                                </PasswordIconToggle>
-                                        </PasswordInputView>
+                                        <Text tiny semi left uppercase color={COLORS.GRAY}>Password:</Text>
+                                        <PasswordInput
+                                                value={password}
+                                                onChangeText={(value) => setPassword(value)}
+                                        />
                                 </AuthContainer>
                         </Auth>
 
-                        <ButtonContainer
-                                onPress={() => handleSignUp()}
-                                disabled={loading}>
-                                {loading ?
-                                        <Loading /> :
-                                        <Text bold center color={'#181400'}>Sign Up</Text>}
-
-                        </ButtonContainer>
-
-                        <SignInLink onPress={() => navigation.navigate('SignIn')}>
-                                <Text small center> Already registered?<Text bold color={'#F1C902'}> Sign in! </Text> </Text>
+                        <SubmitButton
+                                margin={'0 32px'}
+                                handler={handleSignUp}
+                                disabled={loading}
+                                loading={loading}
+                                text={'Sign Up'}
+                        />
+                        <SignInLink onPress={() => navigation.navigate(ROUTES.SIGN_IN)}>
+                                <Text small center> Already registered? <Text small underline bold color={COLORS.PRIMARY_TEXT}>Sign in!</Text> </Text>
                         </SignInLink>
-
-                        <HeaderGraphic>
-                                <RightCircle />
-                                <LeftCircle />
-                        </HeaderGraphic>
-                        <StatusBar barStyle="light-content" />
                 </Container>
         )
 }
@@ -157,7 +136,7 @@ export default SignUp
 
 const Container = styled.View`
         flex: 1;
-        background-color: #E9E7E8;
+        background-color: ${COLORS.PRIMARY_BACKGROUND};
 `;
 const Main = styled.View`
         margin-top: 100px;
@@ -171,64 +150,6 @@ const AuthContainer = styled.View`
         margin-bottom:  32px;
 `;
 
-const AuthField = styled.TextInput`
-        border-bottom-color: #00050f;
-        border-bottom-width: 0.5px; 
-        height: 48px;
-`;
-
-const PasswordInputView = styled.View``;
-
-const PasswordIconToggle = styled.TouchableOpacity`
-        position: absolute;
-        right: 5px;
-        top: 12px;
-`;
-
-const ButtonContainer = styled.TouchableOpacity`
-        margin: 0 32px;
-        height: 48px;
-        align-items: center;
-        justify-content: center;
-        background-color: #F1C902;
-        border-radius: 10px;
-`;
-
-const Loading = styled.ActivityIndicator.attrs((props) => ({
-        color: '#181400',
-        size: 'small',
-}))``;
-
 const SignInLink = styled.TouchableOpacity`
-        margin-top: 8px;
+        margin-top: 10px;
 `;
-
-const HeaderGraphic = styled.View`
-        position: absolute;
-        width: 100%;
-        top: -100px;
-        z-index: -100;
-`;
-
-const RightCircle = styled.View`
-background-color: #181400; 
-        position: absolute;
-        width: 400px;
-        height: 400px;
-        border-radius: 200px;
-        right: -100px;
-        top: -200px;
-`;
-
-const LeftCircle = styled.View`
-        background-color: #F1C902; 
-        position: absolute;
-        width: 200px;
-        height: 200px;
-        border-radius: 100px;
-        left: -50px;
-        top: -50px;
-`;
-
-const StatusBar = styled.StatusBar``;
-

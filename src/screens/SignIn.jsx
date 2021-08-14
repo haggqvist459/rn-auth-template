@@ -1,33 +1,29 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useContext } from 'react'
 import styled from 'styled-components'
 import { Alert, TouchableWithoutFeedback, Keyboard, Platform } from 'react-native'
 import { UserContext } from '../contexts/UserContext';
 import { FirebaseContext } from '../contexts/FirebaseContext';
-import { Text, Input } from '../components/base';
-import { MaterialIcons } from '@expo/vector-icons';
+import { Text, Input, PasswordInput, SubmitButton} from '../components/base';
+import { COLORS, ROUTES, errorMessage} from '../utils';
+import HeaderGraphics from '../components/HeaderGraphics';
 
 // needs keyboard avoiding view etc
 
-
 const SignIn = ({ navigation }) => {
 
-        const [email, setEmail] = useState('');
-        const [password, setPassword] = useState('');
-        const [passwordHidden, setPasswordHidden] = useState(true);
-        const [loading, setLoading] = useState(false);
-
+        // contexts
         const [_, setUser] = useContext(UserContext);
         const firebase = useContext(FirebaseContext);
 
-        // hook calls for this component
-        useEffect(() => {
-                console.log("SignIn useEffect start")
+        // states
+        const [email, setEmail] = useState('');
+        const [password, setPassword] = useState('');
+        const [loading, setLoading] = useState(false);
 
-                return () => {
-                        console.log("SignIn Screen useEffect cleanup")
-                }
-        }, [])
+        // hooks
 
+
+        // functions
         const handleSignIn = async () => {
                 setLoading(true);
                 try {
@@ -43,34 +39,33 @@ const SignIn = ({ navigation }) => {
                                 isLoading: false,
                         })
                 } catch (error) {
-                        console.log("error @signin, ", error.message);
-                        createAlert(error.message);
+                        console.log("error @signin, ", error.code);
+                        createAlert('Could not sign in', errorMessage('signIn-'+error.code));
                 } finally {
                         setLoading(false);
                 }
         }
 
-        const createAlert = (error) => {
+        const createAlert = (title, feedback) => {
                 Alert.alert(
-                        error,
-                        " ",
+                        title,
+                        feedback,
                         [{ text: "OK" }],
                 )
         }
 
         return (
-                <Container
-                        behavior={Platform.OS === "ios" ? "padding" : "height"}>
-                        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <Container behavior={Platform.OS === "ios" ? "padding" : "height"}>
+                        <HeaderGraphics/>
                                 <Main>
                                         <WelcomeContainer>
-                                                <Text title semi center>
+                                                <Text title bold center>
                                                         Welcome Back!
                                                 </Text>
                                         </WelcomeContainer>
                                         <Auth>
                                                 <AuthContainer>
-                                                        <Text tiny semi left uppercase color={'#8C8B8B'}>Email Address:</Text>
+                                                        <Text tiny semi left uppercase color={COLORS.GRAY}>Email Address:</Text>
                                                         <Input
                                                                 autoCapitalize="none"
                                                                 autoCompleteType="email"
@@ -80,38 +75,23 @@ const SignIn = ({ navigation }) => {
                                                         />
                                                 </AuthContainer>
                                                 <AuthContainer>
-                                                        <Text tiny semi left uppercase color={'#8C8B8B'}>Password:</Text>
-                                                        <PasswordInputView>
-                                                                <AuthField
-                                                                        autoCapitalize="none"
-                                                                        autoCompleteType="password"
-                                                                        autoCorrect={false}
-                                                                        secureTextEntry={passwordHidden}
-                                                                        onChangeText={(value) => setPassword(value)}
-                                                                />
-                                                                <PasswordIconToggle onPress={() => setPasswordHidden(!passwordHidden)}>
-                                                                        <MaterialIcons name={`visibility${passwordHidden ? '-off' : ''}`} size={24} color="black" />
-                                                                </PasswordIconToggle>
-                                                        </PasswordInputView>
+                                                        <Text tiny semi left uppercase color={COLORS.GRAY}>Password:</Text>
+                                                        <PasswordInput
+                                                                value={password}
+                                                                onChangeText={(value) => setPassword(value)}
+                                                        />
                                                 </AuthContainer>
                                         </Auth>
-                                        <ButtonContainer
-                                                onPress={() => handleSignIn()}
-                                                disabled={loading}>
-                                                {loading ?
-                                                        <Loading /> :
-                                                        <Text bold center color={'#181400'}>Sign In</Text>}
-                                        </ButtonContainer>
-                                        <SignUpLink onPress={() => navigation.navigate('SignUp')}>
-                                                <Text small center> New to the app?<Text bold color={'#F1C902'}> Sign Up! </Text> </Text>
+                                        <SubmitButton 
+                                                margin={'0 32px'}
+                                                handler={handleSignIn}
+                                                loading={loading}
+                                                disabled={loading}
+                                                text={'Sign In'}/>
+                                        <SignUpLink onPress={() => navigation.navigate(ROUTES.SIGN_UP)}>
+                                                <Text small center> New to the app? <Text small bold underline color={COLORS.PRIMARY_TEXT}>Sign Up!</Text> </Text>
                                         </SignUpLink>
-                                        <HeaderGraphic>
-                                                <RightCircle />
-                                                <LeftCircle />
-                                        </HeaderGraphic>
-                                        <StatusBar barStyle="light-content" />
                                 </Main>
-                        </TouchableWithoutFeedback>
                 </Container>
         )
 }
@@ -120,7 +100,7 @@ export default SignIn
 
 const Container = styled.KeyboardAvoidingView`
         flex: 1;
-        background-color: #E9E7E8;
+        background-color: ${COLORS.PRIMARY_BACKGROUND};
 `;
 const Main = styled.View`
         flex: 1;
@@ -138,67 +118,8 @@ const AuthContainer = styled.View`
         margin-bottom:  32px;
 `;
 
-const AuthField = styled.TextInput`
-        border-bottom-color: #00050f;
-        border-bottom-width: 0.5px; 
-        /* height: 48px; */
-`;
-
-const PasswordInputView = styled.View`
-        
-`;
-
-const PasswordIconToggle = styled.TouchableOpacity`
-        position: absolute;
-        right: 5px;
-        top: 12px;
-        padding: 5px;
-`;
-
-const ButtonContainer = styled.TouchableOpacity`
-        margin: 0 32px;
-        height: 48px;
-        align-items: center;
-        justify-content: center;
-        background-color: #F1C902;
-        border-radius: 10px;
-`;
-
-const Loading = styled.ActivityIndicator.attrs((props) => ({
-        color: '#181400',
-        size: 'small',
-}))``;
-
 const SignUpLink = styled.TouchableOpacity`
-        margin-top: 8px;
+        margin-top: 10px;
 `;
 
-const HeaderGraphic = styled.View`
-        position: absolute;
-        width: 100%;
-        top: -50px;
-        z-index: -100;
-`;
-
-const RightCircle = styled.View`
-background-color: #181400; 
-        position: absolute;
-        width: 400px;
-        height: 400px;
-        border-radius: 200px;
-        right: -100px;
-        top: -200px;
-`;
-
-const LeftCircle = styled.View`
-        background-color: #F1C902; 
-        position: absolute;
-        width: 200px;
-        height: 200px;
-        border-radius: 100px;
-        left: -50px;
-        top: -50px;
-`;
-
-const StatusBar = styled.StatusBar``;
 

@@ -10,10 +10,13 @@ const PasswordInput = ({ ...props }) => {
 
         return (
                 <PasswordInputView>
-                        <CustomInput 
+                        <CustomInput
                                 {...props}
                                 secureTextEntry={passwordHidden}
-                                 />
+                                autoCapitalize="none"
+                                autoCompleteType="password"
+                                autoCorrect={false}
+                        />
                         <PasswordIconToggle onPress={() => setPasswordHidden(!passwordHidden)}>
                                 <MaterialIcons name={`visibility${passwordHidden ? '-off' : ''}`} size={adjustSize(30)} color={COLORS.PRIMARY_BUTTON} />
                         </PasswordIconToggle>
@@ -148,6 +151,6 @@ height: 48px;
                 }
         }}
 
-                border-bottom-width: 0.5px; 
+                border-bottom-width: 0.5px;
         border-bottom-color: ${COLORS.PRIMARY_TEXT};
 */
